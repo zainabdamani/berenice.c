@@ -1,0 +1,444 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct
+{
+int cod;
+char nome[26];
+float valor;
+int quantidade;
+int vendido;
+} produto;
+produto *estoque;
+
+void funcaoprodutos();
+void exibir();
+void cadastrar();
+int verificarcodigo(int codigo);
+int verificarduplicado(int codigo);
+void atualizar();
+void excluir();
+void salvar();
+void ler();
+void funcaovendas();
+void salvar_binario();
+void ler_binario();
+
+int contador=0;
+
+int main()
+{
+estoque=(produto*)malloc(contador*sizeof(produto));
+int continuar=1;
+int menuPrincipal;
+printf("\x1b[35m");
+printf("Ola! Bem vinda, berenice! \n\n");
+
+while (continuar==1)
+{
+    printf("\\x1b[33m");
+    printf("Selecione uma das opcoes a seguir:\\n\\n1. Produtos;\\n2. Vendas;\\n3. Sair;\\n\\n");
+    scanf("%i", &menuPrincipal);
+    getchar();
+    if (menuPrincipal>0 && menuPrincipal<4)
+    {
+        switch (menuPrincipal)
+        {
+
+        case 1:
+            funcaoprodutos();
+
+        case 2:
+            funcaovendas();
+            break;
+        case 3:
+            printf("\\nSaindo do programa em 3, 2, 1...");
+            return 0;
+            break;
+
+        }
+
+    }
+    else
+    {
+        printf("\\nopcao invalida. tente novamente\\n\\n");
+        continuar=1;
+
+    }
+}
+
+return 0;
+}
+
+void funcaoprodutos()
+{
+int continuar=2, opcao_submenu;
+printf("\nMENU DE PRODUTOS\n");
+while (continuar==2)
+{
+printf("Selecione a opcao desejada!\n\n");
+printf("1. Exibir\n");
+printf("2. Cadastrar\n");
+printf("3. Atualizar\n");
+printf("4. Excluir\n");
+printf("5. Salvar\n");
+printf("6. Ler\n");
+printf("7. Voltar\n\n");
+scanf("%i",&opcao_submenu);
+getchar();
+if (opcao_submenu>0 && opcao_submenu<8)
+{
+switch (opcao_submenu)
+{
+case 1:
+exibir();
+break;
+case 2:
+cadastrar();
+break;
+case 3:
+atualizar();
+break;
+case 4:
+excluir();
+break;
+case 5:
+salvar();
+break;
+case 6:
+ler();
+break;
+case 7:
+return;
+break;
+}
+}
+else
+{
+printf("\nopcao invalida. tente novamente\n\n");
+continuar=2;
+}
+}
+}
+
+void exibir()
+{
+printf("\n------------------------------------------------------------\n");
+for (int i = 0; i < contador; i++)
+{
+printf(" Cod %5d | %19s | R$ %5.2f | Quant %5i\n", estoque[i].cod, estoque[i].nome, estoque[i].valor, estoque[i].quantidade);
+printf("------------------------------------------------------------\n");
+
+}
+}
+
+void cadastrar()
+{
+
+int codigo;
+int validar;
+int continuar=1;
+int qtdcad;
+int volta=1;
+while (continuar==1)
+{
+    printf("\\nquantos produtos deseja cadastrar?\\n");
+    scanf("%d", &qtdcad);
+    getchar();
+    if (qtdcad<=0)
+    {
+        funcaoprodutos();
+    }
+    for (int i=0; i<qtdcad; i++)
+    {
+        estoque=(produto*)realloc(estoque,(contador+1)*sizeof(produto));
+        printf("\\n digite a porra do codigo: ");
+        scanf("%d", &codigo);
+        getchar();
+
+        validar=verificarcodigo(codigo);
+        if(validar==15)
+        {
+            if(verificarduplicado(codigo))
+            {
+                printf("\\ncodigo ja cadastrado, tente novamnete\\n");
+            }
+            else
+            {
+
+                if (estoque==NULL)
+                {
+                    printf("ERROOOOOOOOOOOOOOOO");
+                    return;
+                }
+                estoque[contador].cod=codigo;
+                printf("\\nagora digite o nome: \\n");
+                scanf("%[^\\n]", &estoque[contador].nome);
+                getchar();
+                do
+                {
+                    printf("\\ndigite agora o valor do produto novo: \\n");
+                    scanf("%f", &estoque[contador].valor);
+                    getchar();
+                }
+                while (estoque[contador].valor<0);
+                do
+                {
+                    printf("\\ndigite a qtde:\\n");
+                    scanf("%d", &estoque[contador].quantidade);
+                    getchar();
+                }
+                while (estoque[contador].quantidade<0);
+                contador++;
+
+
+
+            }
+        }
+        continuar=1;
+    }
+}
+}
+
+int verificarcodigo(int codigo)
+{
+
+for (int i=0; i<contador; i++)
+{
+
+    if (codigo==estoque[i].cod)
+    {
+
+        printf("\\ncodigo ja cadastrado, tente novamente:\\n");
+        return 10;
+
+    }
+}
+return 15;
+}
+
+int verificarduplicado(int codigo)
+{
+
+for (int i=0; i<contador; i++)
+{
+
+    if (codigo==estoque[i].cod)
+    {
+        return 1;
+    }
+
+}
+return 0;
+}
+void atualizar()
+{
+
+int escolha,mudar_produto,codigo,continuar=1, voltaMenu;
+
+exibir();
+while (continuar==1)
+{
+    printf("\\n Digite o codigo que deseja alterar: ");
+    scanf("%d",&escolha);
+    getchar();
+
+    for(int i=0; i<contador; i++)
+    {
+
+        if (estoque[i].cod==escolha)
+        {
+            printf("\\n O que voce deseja mudar nesse produto? \\n\\n 1- Valor \\n 2- Quantidade \\n\\n Digite o codigo: ");
+            scanf("%d",&mudar_produto);
+            getchar();
+
+            if(mudar_produto>0&&mudar_produto<3)
+            {
+                switch(mudar_produto)
+                {
+
+                case 1:
+                    printf("\\n O valor era %.2f e agora vai ser: ", estoque[i].valor);
+                    scanf("%f",&estoque[i].valor);
+                    getchar();
+                    printf("Valor atualizado: %.2f\\n\\n", estoque[i].valor);
+                    break;
+
+                case 2:
+                    printf("\\n A quantidade era %d e agora vai ser: ", estoque[i].quantidade);
+                    scanf("%d",&estoque[i].quantidade);
+                    getchar();
+                    printf("Quantidade atualizada: %.2f\\n\\n", estoque[i].quantidade);
+                    break;
+                }
+            }
+            else
+            {
+                printf("\\n Codigo Invalido ");
+            }
+
+        }
+
+    }
+    printf("\\n Deseja alterar outro produto(1- Sim/2- Nao)? ");
+    scanf("%d",&voltaMenu);
+    getchar();
+
+    if(voltaMenu==1)
+    {
+        atualizar();
+    }
+    else if(voltaMenu==2)
+    {
+        funcaoprodutos();
+    }
+}
+}
+
+void excluir()
+{
+int escolha;
+int parar = 0;
+int indice = -1;
+
+exibir();
+printf("\\nDigite o Codigo do item que deseja excluir: ");
+scanf("%d", &escolha);
+getchar();
+
+for (int i = 0; i <= contador; i++)
+{
+    if (estoque[i].cod == escolha)
+    {
+        indice = i;
+    }
+}
+if (indice != -1)
+{
+    estoque = (produto*)realloc(estoque,contador*sizeof(produto));
+    free(estoque);
+    for (int i = indice; i < contador - 1; i++)
+    {
+        estoque[i] = estoque[i + 1];
+    }
+    contador--;
+    printf("Produto excluido com sucesso.\\n");
+}
+else
+{
+    printf("Produto com o codigo %d não encontrado.\\n", escolha);
+}
+}
+
+void salvar()
+{
+
+FILE* ponteiro_txt = fopen("produtos.txt", "w");
+
+if(ponteiro_txt==NULL)
+{
+    printf("\\nse fudeu\\n");
+    return;
+}
+fprintf(ponteiro_txt, "%d\\n", contador);
+for (int i=0; i<contador; i++)
+{
+
+    fprintf(ponteiro_txt, "%d\\n%s\\n%.2f\\n%d\\n%d\\n", estoque[i].cod, estoque[i].nome, estoque[i].valor, estoque[i].quantidade, estoque[i].vendido);
+
+}
+fclose(ponteiro_txt);
+}
+
+void salvar_binario()
+{
+
+FILE* ponteiro_binario = fopen("produtos.dat", "wb");
+
+if(ponteiro_binario==NULL)
+{
+    printf("\\nse fudeu\\n");
+    return;
+}
+fwrite(ponteiro_binario, "%d\\n", contador);
+for (int i=0; i<contador; i++)
+{
+
+    fwrite(ponteiro_binario, "%d\\n%s\\n%.2f\\n%d\\n%d\\n", estoque[i].cod, estoque[i].nome, estoque[i].valor, estoque[i].quantidade, estoque[i].vendido);
+
+}
+fclose(ponteiro_binario);
+}
+
+void ler ()
+{
+
+FILE* ponteiro_txt = fopen("produtos.txt", "r");
+
+if(ponteiro_txt==NULL)
+{
+    printf("\\nse fudeu\\n");
+    return;
+}
+fscanf(ponteiro_txt, "%d", &contador);
+estoque=(produto*)realloc(estoque,(contador)*sizeof(produto));
+
+for (int i=0; i<contador; i++)
+{
+
+    fscanf(ponteiro_txt, "%d\\n%s\\n%f\\n%d\\n%d", &estoque[i].cod, estoque[i].nome, &estoque[i].valor, &estoque[i].quantidade, &estoque[i].vendido);
+
+}
+fclose(ponteiro_txt);
+}
+
+void ler_binario()
+{
+
+FILE* ponteiro_binario = fopen("produtosbinario.dat", "rb");
+
+if(ponteiro_binario==NULL)
+{
+    printf("\\nse fudeu\\n");
+    return;
+}
+fread(ponteiro_binario, "%d", &contador);
+estoque=(produto*)realloc(estoque,(contador)*sizeof(produto));
+
+for (int i=0; i<contador; i++)
+{
+
+    fread(ponteiro_binario, "%d\\n%s\\n%f\\n%d\\n%d", &estoque[i].cod, estoque[i].nome, &estoque[i].valor, &estoque[i].quantidade, &estoque[i].vendido);
+
+}
+fclose(ponteiro_binario);
+}
+}
+
+void funcaovendas(){
+
+int continuar=2, opcao_submenu;
+printf("\\nMENU DE VENDAS\\n");
+while (continuar==2)
+{
+    printf("Selecione a opcao desejada!\\n\\n");
+    printf("1. Realizar venda\\n");
+    printf("2. Relatorio de venda\\n");
+    printf("3. Voltar\\n");
+    scanf("%i",&opcao_submenu);
+    getchar();
+    if (opcao_submenu>0 && opcao_submenu<4)
+    {
+        switch (opcao_submenu)
+        {
+        case 1:
+            ///realizar_venda();
+            break;
+        case 2:
+            ///relatorio();
+            break;
+        case 3:
+            return;
+            break;
+}
