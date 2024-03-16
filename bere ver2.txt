@@ -1,0 +1,389 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+
+int quantidadeTotal[5]= {0};
+float subT[5]= {0};
+int qtdEstoque[5]= {0};
+char item[5][50]= {"pao de forma", "pao de centeio","broa de milho", "sonho", "tubaina"};
+
+//funcoes
+int menu();
+
+int cadastrarEstoque();
+
+int visualizarEstoque();
+
+int realizarVenda();
+
+int pagamento(float totalP, int qtdTotal[], float subtotal[]);
+
+
+// main
+int main()
+{
+
+    menu();
+    cadastrarEstoque(); //funcao cadastrar estoque
+    visualizarEstoque(); //funcao visualizer estoque
+    realizarVenda(); // funcao vendas
+
+
+
+    return 0;
+}
+int menu(){
+    int opcao;
+    int continuar = 1; //variavel p controla oloop
+
+    while (continuar)
+    {
+        system("cls");
+        printf("\nMenu Principal:\n");
+        printf("1. Cadastrar estoque\n");
+        printf("2. Visualizar estoque\n");
+        printf("3. Realizar Venda\n");
+        printf("4. Sair\n");
+        printf("escolha uma opcao: ");
+        scanf("%d", &opcao);
+        getchar();
+
+        switch (opcao)
+        {
+        case 1:
+            cadastrarEstoque();
+            break;
+        case 2:
+            visualizarEstoque();
+            break;
+        case 3:
+            realizarVenda();
+            break;
+        case 4:
+            printf("fechando programa em 3 2 1... \n");
+            continuar = 0; // saind do loop]
+            break;
+        default:
+            printf("entrada invalida, digite novamente:\n");
+        }
+    }
+
+}
+
+
+///funçoes
+int cadastrarEstoque()
+{
+    system("cls");
+    int opcao;
+    char continuar='s';
+    int qtd;
+
+    while (continuar=='s'||continuar=='S')
+    {
+        printf("\nCADASTRO DE ESTOQUE\n");
+        printf("----------------------------------------------------------*\n");
+        printf("| Codigo | Produto         | Valor Unitario |   Estoque   |\n");
+        printf("----------------------------------------------------------\n");
+        printf("|  1     | Pao de Forma    | R$7,50         |     %d       |\n", qtdEstoque[0]);
+        printf("|  2     | Pao de Centeio  | R$8,69         |     %d       |\n", qtdEstoque[1]);
+        printf("|  3     | Broa de Milho   | R$5,00         |     %d       |\n", qtdEstoque[2]);
+        printf("|  4     | Sonho           | R$4,50         |     %d       |\n", qtdEstoque[3]);
+        printf("|  5     | Tubaina         | R$3,25         |     %d       |\n", qtdEstoque[4]);
+        printf("----------------------------------------------------------*\n");
+
+        printf("Insira o codigo do produto: \n");
+        scanf("%d", &opcao);
+        getchar();
+
+        if (opcao>=1 && opcao<=5)
+        {
+
+            printf("digite a quantidade:\n");
+            scanf("%d", &qtd);
+            getchar();
+            if (qtd>0)
+            {
+
+                switch (opcao)
+                {
+
+                case 1:
+                    qtdEstoque[0]=qtd;
+                    break;
+                case 2:
+                    qtdEstoque[1]=qtd;
+                    break;
+                case 3:
+                    qtdEstoque[2]=qtd;
+                    break;
+                case 4:
+                    qtdEstoque[3]=qtd;
+                    break;
+                case 5:
+                    qtdEstoque[4]=qtd;
+                    break;
+                }
+                printf("deseja continuar?\nS - SIM\nN- NAO\n");
+                scanf("%c", &continuar);
+                getchar();
+                if (continuar=='N'||continuar=='n')
+                {
+
+                    break;
+                }
+            }
+            else
+            {
+                printf("quantidade invalida\n");
+
+            }
+
+        }
+        else
+        {
+            printf("codigo invalido, digite novamente: \n");
+
+        }
+
+    }
+
+}
+
+int visualizarEstoque()
+{
+    system("cls");
+    int codmenu;
+
+    printf("\nVISUALIZAR ESTOQUE\n");
+    printf("----------------------------------------------------------*\n");
+    printf("| Codigo | Produto         | Valor Unitario |   Estoque   |\n");
+    printf("----------------------------------------------------------\n");
+    printf("|  1     | Pao de Forma    | R$7,50         |     %d       |\n", qtdEstoque[0]);
+    printf("|  2     | Pao de Centeio  | R$8,69         |     %d       |\n", qtdEstoque[1]);
+    printf("|  3     | Broa de Milho   | R$5,00         |     %d       |\n", qtdEstoque[2]);
+    printf("|  4     | Sonho           | R$4,50         |     %d       |\n", qtdEstoque[3]);
+    printf("|  5     | Tubaina         | R$3,25         |     %d       |\n", qtdEstoque[4]);
+    printf("----------------------------------------------------------*\n");
+    printf("\n\n\nescolha:\n1-voltar ao menu\n2-ir pra venda\n");
+    scanf("%d", &codmenu);
+    getchar();
+    if (codmenu>=1 && codmenu<=2)
+    {
+        if (codmenu==1)
+        {
+
+        }
+        else if (codmenu==2)
+        {
+            realizarVenda();
+
+        }
+    }
+
+
+}
+
+int realizarVenda()
+{
+    system("cls");
+    int opcao, qtde;
+    float valorUnitario;
+    float totalP;
+    char continuar='s';
+    int qtdTotal[5]= {0};
+    float subtotal[5]= {0};
+    char cpf[12]={0};
+    char perguntaCPF;
+
+    while (continuar=='s'||continuar=='S')
+    {
+
+        printf("VENDASSSSSSSSSSSSS\n");
+        printf("----------------------------------------------------------*\n");
+        printf("| Codigo | Produto         | Valor Unitario |   Estoque   |\n");
+        printf("----------------------------------------------------------\n");
+        printf("|  1     | Pao de Forma    | R$7,50         |     %d       |\n", qtdEstoque[0]);
+        printf("|  2     | Pao de Centeio  | R$8,69         |     %d       |\n", qtdEstoque[1]);
+        printf("|  3     | Broa de Milho   | R$5,00         |     %d       |\n", qtdEstoque[2]);
+        printf("|  4     | Sonho           | R$4,50         |     %d       |\n", qtdEstoque[3]);
+        printf("|  5     | Tubaina         | R$3,25         |     %d       |\n", qtdEstoque[4]);
+        printf("----------------------------------------------------------*\n");
+
+        printf("Insira o codigo do produto: \n");
+        scanf("%d", &opcao);
+        getchar();
+        opcao-=1;
+
+        if (opcao >=0 && opcao <= 4)
+        {
+            switch (opcao)
+            {
+            case 0:
+                valorUnitario = 7.5;
+                break;
+            case 1:
+                valorUnitario = 8.69;
+                break;
+            case 2:
+                valorUnitario = 5;
+                break;
+            case 3:
+                valorUnitario = 4.5;
+                break;
+            case 4:
+                valorUnitario = 3.25;
+                break;
+            }
+
+            printf("\nDigite a quantidade de produto\n");
+            scanf("%d", &qtde);
+            getchar();
+
+
+            if (qtde > 0 && qtde <= qtdEstoque[opcao])
+            {
+                subtotal[opcao]=qtde*valorUnitario;
+                qtdTotal[opcao]+=qtde;
+                qtdEstoque[opcao]-=qtde;
+                totalP+=subtotal[opcao];
+
+                subT[opcao]+=subtotal[opcao];
+                quantidadeTotal[opcao]+=qtdTotal[opcao];
+
+            }
+
+            else
+            {
+                printf("Entrada invalida de quantidade");
+                menu();
+            }
+
+        }
+        else
+        {
+            printf("Entrada invalida de opcao");
+        }
+
+        printf("\ndeseja continuar?\nS - SIM\nN- NAO\n");
+        scanf("%c", &continuar);
+        getchar();
+
+    }
+        system("cls");
+
+    printf("CUPOM FISCAL\n");
+    printf("deseja incluir cpf na nota?\nS-Sim\nN-Nao\n");
+    scanf("%c", &perguntaCPF);
+    getchar();
+    system("cls");
+    if (perguntaCPF=='s'||perguntaCPF=='S'){
+
+        printf("\ndigite o cpf:\n");
+        scanf("%s\n", &cpf);
+        getchar();
+
+    }
+    printf("cpf: %s", cpf);
+    for (int i=0; i<=4; i++)
+    {
+
+        if (qtdTotal[i]>=1&&subtotal[i]>=1)
+        {
+            printf("item %s quantidade %d valor %.2f\n\n\n", item[i], qtdTotal[i], subtotal[i]);
+        }
+
+    }
+    printf("subtotal da compra e %.2f\n\n", totalP);
+
+
+    pagamento(totalP, qtdTotal, subtotal);
+}
+
+int pagamento (float totalP, int qtdTotal[], float subtotal[])
+{
+
+    int numeroparcela;
+    float valor, total, troco, nota, totalparcelas, parcelas, desconto;
+    char tipopagamento;
+    char continuar='s';
+    while (continuar=='s'||continuar=='S')
+    {
+    printf("O total ficou %.2f\n\nQual seria a forma de pagamento?\\n\n[1] A vista\n\n[2] A prazo\n\n", totalP);
+    scanf(" %c", &tipopagamento);
+    getchar();
+
+
+            if (tipopagamento == '1')
+            {
+                printf("Insira o valor recebido:\n");
+                scanf("%f", &nota);
+                getchar();
+
+                if (nota < totalP)
+                {
+                    printf("Valor recebido insuficiente.\n");
+                }
+                else
+                {
+
+                    if (totalP > 0 && totalP <= 50)
+                    {
+                        desconto = (totalP * 0.05);
+                        troco = nota - (totalP - desconto);
+                        printf("Seu troco com de desconto eh %.2f\nSeu desconto foi de %.2f", troco, desconto);
+                    }
+                    else if (totalP>50 && totalP < 100)
+                    {
+                        desconto = (totalP * 0.10);
+                        troco = nota - (totalP - desconto);
+                        printf("Seu troco com de desconto eh %.2f\nSeu desconto foi de %.2f", troco, desconto);
+                    }
+                    else if (totalP >= 100)
+                    {
+                        desconto = (totalP * 0.18);
+                        troco = nota - (totalP - desconto);
+                        printf("Seu troco com de desconto eh %.2f\nSeu desconto foi de %.2f", troco, desconto);
+                    }
+                    else
+                    {
+                        printf("Entrada invalida de nota");
+                    }
+                }
+
+
+            }
+             else if (tipopagamento == '2')
+            {
+                printf("Insira o numero das parcelas\n\n");
+                scanf("%d", &numeroparcela);
+                getchar();
+
+
+                if (numeroparcela >= 1 && numeroparcela <= 3)
+                {
+                    totalparcelas = totalP + (totalP * 0.05);
+                    parcelas=totalparcelas/numeroparcela;
+                    printf("O total com acrescimo 5%% e %.2f\nO valor de cada parcela e %.2f", totalparcelas, parcelas);
+                }
+                else if (numeroparcela > 3)
+                {
+                    totalparcelas = totalP + (totalP * 0.08);
+                    parcelas=totalparcelas/numeroparcela;
+                    printf("O total com acrescimo de 8%% e %.2f\nO valor de cada parcela e %.2f", totalparcelas, parcelas);
+                    break;
+                }
+                else
+                {
+                    printf("Entrada invalida de parcelas");
+                }
+
+            } else {
+            printf("Entrada invalida de pagamento");
+            }
+    }
+    printf("\ndeseja voltar para forma de pagamento (s) ou deseja realizar uma nova compra(n)?\nS- Venda\nN- Menu\n");
+    scanf("%c", &continuar);
+    getchar();
+}
