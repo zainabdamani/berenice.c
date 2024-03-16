@@ -1,0 +1,94 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+int opcao, qtde, numeroparcela;
+float forma, centeio, milho, sonho, tubaina, valor, total, troco, nota, totalparcelas;
+char tipopagamento;
+
+forma = 7.50;
+centeio = 8.69;
+milho = 5.00;
+sonho = 4.50;
+tubaina = 3.25;
+
+printf("MERCADINHO DA BERENICE\n\n|    item      |     nome do item      |       valor        |\n|      1       |     pao de forma      |       7,50         |\n|      2       |    pao de centeio     |       8,69         |\n|      3       |     broa de milho     |       5,00         |\n|      4       |        sonho          |       4,50         |\n|      5       |       tubaina         |       3,25         |\n\ndigite o codigo dos produtos:\n");
+scanf("%d", &opcao);
+getchar();
+system("cls");
+
+if (opcao >= 1 && opcao <= 5) {
+    if (opcao == 1) {
+        valor = forma;
+    } else if (opcao == 2) {
+        valor = centeio;
+    } else if (opcao == 3) {
+        valor = milho;
+    } else if (opcao == 4) {
+        valor = sonho;
+    } else if (opcao == 5) {
+        valor = tubaina;
+    }
+
+    printf("digite a quantidade de produto\n\n");
+    scanf("%d", &qtde);
+    getchar();
+    system("cls");
+
+    if (qtde > 0) {
+        total = qtde * valor;
+        printf("o total ficou %.2f\n\nqual seria a forma de pagamento?\n\n1 a vista\n\n2 a prazo\n", total);
+        scanf(" %c", &tipopagamento);
+        getchar();
+        system("cls");
+
+        if (tipopagamento == '1' || tipopagamento == '2') {
+            if (tipopagamento == '1') {
+                printf("insira o valor da nota\n\n");
+                scanf("%f", &nota);
+                getchar();
+                system("cls");
+
+                if (nota > 0 && nota <= 50) {
+                    troco = nota - (total - (total * 0.05));
+                    printf("seu troco eh %.2f", troco);
+                } else if (nota > 50 && nota < 100) {
+                    troco = nota - (total - (total * 0.10));
+                    printf("seu troco eh %.2f", troco);
+                } else if (nota >= 100) {
+                    troco = nota - (total - (total * 0.18));
+                    printf("seu troco eh %.2f", troco);
+                } else {
+                    printf("entrada invalida de nota");
+                }
+            } else if (tipopagamento == '2') {
+                printf("insira o valor das parcelas\n\n");
+                scanf("%d", &numeroparcela);
+                getchar();
+                system("cls");
+
+                if (numeroparcela >= 1 && numeroparcela <= 3) {
+                    totalparcelas = total + (total * 0.05);
+                    printf("o total com acrescimo e %.2f", totalparcelas);
+                } else if (numeroparcela > 3) {
+                    totalparcelas = total + (total * 0.08);
+                    printf("o total com acrescimo e %.2f", totalparcelas);
+                } else {
+                    printf("entrada invalida de parcelas");
+                }
+            }
+        } else {
+            printf("entrada invalida de pagamento");
+        }
+    } else {
+        printf("entrada invalida de quantidade");
+    }
+} else {
+    printf("entrada invalida de opcao");
+}
+
+return 0;
+}
+
+
